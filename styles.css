@@ -1667,25 +1667,33 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 /* ==========================================================================
-   SCROLL REVEAL (Primary Motion Entrance Animations)
+   SCROLL REVEAL (Instant Hero + Fluid Scroll Reveal)
    ========================================================================== */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity var(--dur-reveal) var(--ease-signature), transform var(--dur-reveal) var(--ease-signature);
+  transform: translateY(20px);
+  transition: opacity 350ms var(--ease-signature), transform 350ms var(--ease-signature);
   will-change: opacity, transform;
 }
 
+/* O Hero NUNCA espera: aparece imediatamente no primeiro milissegundo */
+.hero-section .reveal,
+.hero-content,
+.hero-stage-container {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 .reveal.active {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 /* Stagger Delay Utility */
-.delay-100 { transition-delay: 80ms; }
-.delay-200 { transition-delay: 160ms; }
-.delay-300 { transition-delay: 240ms; }
-.delay-400 { transition-delay: 320ms; }
+.delay-100 { transition-delay: 50ms; }
+.delay-200 { transition-delay: 100ms; }
+.delay-300 { transition-delay: 150ms; }
+.delay-400 { transition-delay: 200ms; }
 
 /* ==========================================================================
    AUTHORITY SECTION: PEDRO ELIAS SOUSA DE LIMA
@@ -1800,6 +1808,16 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 @media (max-width: 768px) {
+  /* CARREGAMENTO INSTANTÂNEO NO CELULAR: Exibe todas as informações sem esperar scroll */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .delay-100, .delay-200, .delay-300, .delay-400 {
+    transition-delay: 0s !important;
+  }
+
   /* Header Mobile: Proporção e Alinhamento Perfeito */
   .site-header {
     padding: 10px 0;

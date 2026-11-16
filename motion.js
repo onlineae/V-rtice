@@ -41,6 +41,12 @@ function initAmbientCanvas() {
   const canvas = document.getElementById('ambient-canvas');
   if (!canvas) return;
 
+  // No mobile, desativar canvas interativo para liberar 100% de CPU/GPU e eliminar qualquer lentidão
+  if (window.innerWidth <= 768) {
+    canvas.style.display = 'none';
+    return;
+  }
+
   const ctx = canvas.getContext('2d');
   let width, height;
   let particles = [];
@@ -148,10 +154,21 @@ function initAmbientCanvas() {
 }
 
 /* ==========================================================================
-   3. SCROLL REVEAL (IntersectionObserver with Stagger Budget < 500ms)
+   3. SCROLL REVEAL (Ultra-Rápido: Sem Delay no Mobile e Antecipado no Desktop)
    ========================================================================== */
 function initScrollReveal() {
-  const reveals = document.querySelectorAll('.reveal');
+  // No celular, ativa absolutamente tudo no primeiro milissegundo
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+    return;
+  }
+
+  // No desktop, o Hero entra imediatamente sem esperar scroll
+  document.querySelectorAll('.hero-section .reveal, .hero-content, .hero-stage-container').forEach(el => {
+    el.classList.add('active');
+  });
+
+  const reveals = document.querySelectorAll('.reveal:not(.active)');
   if (!reveals.length) return;
 
   const observer = new IntersectionObserver((entries, obs) => {
@@ -162,8 +179,8 @@ function initScrollReveal() {
       }
     });
   }, {
-    threshold: 0.15,
-    rootMargin: '0px 0px -40px 0px'
+    threshold: 0.02,
+    rootMargin: '100px 0px 100px 0px' // Antecipa 100px antes de entrar na tela
   });
 
   reveals.forEach(el => observer.observe(el));
@@ -188,7 +205,7 @@ function initNumberCounters() {
   const startCounting = (counter) => {
     const target = parseFloat(counter.getAttribute('data-counter'));
     const format = counter.getAttribute('data-format') || 'standard';
-    const duration = 2000;
+    const duration = window.innerWidth <= 768 ? 600 : 1200;
     const startTime = performance.now();
 
     const update = (now) => {
@@ -209,6 +226,11 @@ function initNumberCounters() {
     requestAnimationFrame(update);
   };
 
+  if (window.innerWidth <= 768) {
+    counters.forEach(c => startCounting(c));
+    return;
+  }
+
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -216,7 +238,7 @@ function initNumberCounters() {
         obs.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0.02, rootMargin: '100px 0px 100px 0px' });
 
   counters.forEach(c => observer.observe(c));
 }
