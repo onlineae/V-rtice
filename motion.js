@@ -16,22 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. NAVBAR SCROLL EFFECT
+   1. NAVBAR SCROLL EFFECT (Desativado: cabeçalho flui naturalmente com a tela)
    ========================================================================== */
 function initNavbarScroll() {
-  const header = document.querySelector('.site-header');
-  if (!header) return;
-
-  const handleScroll = () => {
-    if (window.scrollY > 40) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  };
-
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  handleScroll();
+  // O cabeçalho agora sobe naturalmente com a rolagem da tela, sem travar na frente
 }
 
 /* ==========================================================================
@@ -154,36 +142,10 @@ function initAmbientCanvas() {
 }
 
 /* ==========================================================================
-   3. SCROLL REVEAL (Ultra-Rápido: Sem Delay no Mobile e Antecipado no Desktop)
+   3. SCROLL REVEAL (Instantâneo: 100% das informações visíveis sem falhas)
    ========================================================================== */
 function initScrollReveal() {
-  // No celular, ativa absolutamente tudo no primeiro milissegundo
-  if (window.innerWidth <= 768) {
-    document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-    return;
-  }
-
-  // No desktop, o Hero entra imediatamente sem esperar scroll
-  document.querySelectorAll('.hero-section .reveal, .hero-content, .hero-stage-container').forEach(el => {
-    el.classList.add('active');
-  });
-
-  const reveals = document.querySelectorAll('.reveal:not(.active)');
-  if (!reveals.length) return;
-
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('active');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.02,
-    rootMargin: '100px 0px 100px 0px' // Antecipa 100px antes de entrar na tela
-  });
-
-  reveals.forEach(el => observer.observe(el));
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
 }
 
 /* ==========================================================================
